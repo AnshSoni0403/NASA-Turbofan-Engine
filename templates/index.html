@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Industrial Fault Analysis System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1c2b4b 0%, #1a237e 100%);
+            min-height: 100vh;
+            padding: 3rem 0;
+            color: #fff;
+        }
+
+        .dashboard {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #fff, #64b5f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            color: #90caf9;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .main-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 3rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: #90caf9;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .form-group i {
+            position: absolute;
+            left: 1rem;
+            top: 3.2rem;
+            color: #64b5f6;
+            font-size: 1.2rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            color: #fff;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #64b5f6;
+            box-shadow: 0 0 20px rgba(100, 181, 246, 0.2);
+        }
+
+        .btn-submit {
+            grid-column: 1 / -1;
+            padding: 1.2rem;
+            background: linear-gradient(45deg, #1976d2, #64b5f6);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(25, 118, 210, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(25, 118, 210, 0.4);
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 25px;
+            padding: 2.5rem;
+            margin-top: 3rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .results-title {
+            font-size: 2rem;
+            color: #fff;
+            margin-bottom: 2rem;
+            text-align: center;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid rgba(144, 202, 249, 0.2);
+        }
+
+        .fault-category {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .fault-category h3 {
+            color: #64b5f6;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .fault-category p {
+            color: #fff;
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .recommendations {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2rem;
+            border-radius: 20px;
+        }
+
+        .recommendations h3 {
+            color: #64b5f6;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .recommendation-list {
+            list-style: none;
+        }
+
+        .recommendation-list li {
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .recommendation-list li:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .recommendation-list li i {
+            color: #64b5f6;
+            font-size: 1.5rem;
+        }
+
+        @media (max-width: 1200px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .main-card {
+                padding: 1.5rem;
+            }
+
+            .form-control {
+                padding: 0.8rem 0.8rem 0.8rem 2.5rem;
+            }
+        }
+
+        /* Placeholder color */
+        .form-control::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Input number spinner removal */
+        .form-control::-webkit-outer-spin-button,
+        .form-control::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .form-control[type=number] {
+            -moz-appearance: textfield;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dashboard">
+        <header class="header">
+            <h1><i class="fas fa-microchip"></i> Industrial Fault Analysis</h1>
+            <p>Advanced Sensor Monitoring & Predictive Maintenance System</p>
+        </header>
+
+        <div class="main-card">
+            <form action="/analyze" method="POST" class="form-grid">
+                <!-- Vibration -->
+                <div class="form-group">
+                    <label for="vibration">Vibration Level (m/s²) [0.0 - 10.0]</label>
+                    <i class="fas fa-wave-square"></i>
+                    <input type="number" step="0.01" id="vibration" name="vibration" class="form-control" required
+                        placeholder="Enter vibration level">
+                </div>
+
+                <!-- Temperature -->
+                <div class="form-group">
+                    <label for="temperature">Temperature (°C) [-20°C to 100°C]</label>
+                    <i class="fas fa-temperature-high"></i>
+                    <input type="number" step="0.01" id="temperature" name="temperature" class="form-control" required
+                        placeholder="Enter temperature">
+                </div>
+
+                <!-- Pressure -->
+                <div class="form-group">
+                    <label for="pressure">Pressure (bar) [0.0 - 100.0]</label>
+                    <i class="fas fa-tachometer-alt"></i>
+                    <input type="number" step="0.01" id="pressure" name="pressure" class="form-control" required
+                        placeholder="Enter pressure">
+                </div>
+
+                <!-- Humidity -->
+                <div class="form-group">
+                    <label for="humidity">Humidity (%) [0% - 100%]</label>
+                    <i class="fas fa-water"></i>
+                    <input type="number" step="0.01" id="humidity" name="humidity" class="form-control" required
+                        placeholder="Enter humidity">
+                </div>
+
+                <!-- RPM -->
+                <div class="form-group">
+                    <label for="rpm">RPM (RPM) [0 - 10000]</label>
+                    <i class="fas fa-sync"></i>
+                    <input type="number" step="0.01" id="rpm" name="rpm" class="form-control" required
+                        placeholder="Enter RPM">
+                </div>
+
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-search"></i>
+                    Analyze System
+                </button>
+            </form>
+        </div>
+
+        {% if result %}
+        <div class="results-section">
+            <h2 class="results-title">Analysis Results</h2>
+
+            <div class="fault-category">
+                <h3><i class="fas fa-exclamation-circle"></i> Fault Category</h3>
+                <p>{{ result['Fault Category'] }}</p>
+            </div>
+
+            <div class="recommendations">
+                <h3><i class="fas fa-clipboard-list"></i> Recommended Actions</h3>
+                <ul class="recommendation-list">
+                    {% for recommendation in result['Recommendations'] %}
+                    <li>
+                        <i class="fas fa-check-circle"></i>
+                        {{ recommendation }}
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</body>
+
+</html>
